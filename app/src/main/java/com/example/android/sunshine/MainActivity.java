@@ -10,9 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity {
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +63,26 @@ public class MainActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private final String mockData[] = {"Today-Sunny-83/63","Tomorrow-Sunny-83/63","Wednesday-Sunny-83/63","Thursday-Sunny-83/63","Friday-Sunny-83/63"};
+
+        private ArrayAdapter<String> mAdapter;
+
+        private ArrayList<String> mForecastData;
+
+        private ListView mListView;
+
         public PlaceholderFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+           View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+           mForecastData = new ArrayList<String>(Arrays.asList(mockData));
+           mAdapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,mForecastData);
+            ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast);
+            listView.setAdapter(mAdapter);
+
             return rootView;
         }
     }
