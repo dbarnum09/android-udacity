@@ -4,6 +4,7 @@ package com.example.android.sunshine;
  * Created by davebarnum on 3/4/15.
  */
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,10 +16,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.android.sunshine.com.example.android.sunshine.json.WeatherDataParser;
+import com.example.android.sunshine.tasks.DetailActivity;
 
 import org.json.JSONException;
 
@@ -59,7 +62,18 @@ public class ForecastFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mForecastData = new ArrayList<String>(Arrays.asList(mockData));
         mAdapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,mForecastData);
-        ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast);
+        final ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast);
+        listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String text = (String)listView.getItemAtPosition(position);
+//                Toast toast = Toast.makeText(view.getContext(), text, Toast.LENGTH_LONG);
+//                toast.show();
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT,text);
+                startActivity(intent);
+            }
+        });
         listView.setAdapter(mAdapter);
         return rootView;
     }
@@ -92,7 +106,9 @@ public class ForecastFragment extends Fragment {
             super.onPostExecute(strings);
             ArrayList<String> data = new ArrayList<String>(Arrays.asList(strings));
             mAdapter.clear();
-            mAdapter.addAll(data);
+            for (int i=0; i < data.size(); i++) {
+                mAdapter.add(data.get(i));
+            }
         }
 
         @Override
@@ -116,7 +132,7 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 //URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
-                /   /Log.v(LOG_TAG, builtUri.toString());
+                //Log.v(LOG_TAG, builtUri.toString());
                 URL url = new URL(builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
