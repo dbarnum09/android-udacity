@@ -7,7 +7,15 @@
         android:inputType="text"
         android:singleLine="true"
         android:editable="true">
-
     </EditTextPreference>
+
+    <ListPreference
+        android:key="@string/pref_units_key"
+        android:title="@string/temperature_units"
+        android:entries="@array/temperature_unit_entries"
+        android:entryValues="@array/temperature_unit_values"
+        android:defaultValue="@string/pref_default_temperature">
+
+    </ListPreference>
 
 </PreferenceScreen>

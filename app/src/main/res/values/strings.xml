@@ -8,4 +8,10 @@
     <string name="pref_location_key">location</string>
     <string name="pref_location_default_value">14609</string>
     <string name="pref_location_label">Location</string>
+    <string name="units">Units</string>
+    <string name="temperature_units">Temperature Units</string>
+    <string name="temperature_units_metric">metric</string>
+    <string name="temperature_units_imperial">imperial</string>
+    <string name="pref_units_key">units</string>
+    <string name="pref_default_temperature">metric</string>
 </resources>

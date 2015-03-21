@@ -52,6 +52,17 @@ public class ForecastFragment extends Fragment {
     public ForecastFragment() {
     }
 
+
+    private String formatHighLow(double high,double low) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        String tempUnits = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_default_temperature));
+        if (tempUnits.equals(getString(R.string.temperature_units_imperial))) {
+            high =high*1.8 + 32;
+            low = low*1.8 + 32;
+        }
+
+        return Math.round(high) + "/" + Math.round(low);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +139,7 @@ public class ForecastFragment extends Fragment {
                 mAdapter.add(data.get(i));
             }
         }
+
 
         @Override
         protected String[] doInBackground(String... params) {
