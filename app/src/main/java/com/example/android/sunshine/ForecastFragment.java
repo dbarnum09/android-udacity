@@ -53,16 +53,7 @@ public class ForecastFragment extends Fragment {
     }
 
 
-    private String formatHighLow(double high,double low) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        String tempUnits = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_default_temperature));
-        if (tempUnits.equals(getString(R.string.temperature_units_imperial))) {
-            high =high*1.8 + 32;
-            low = low*1.8 + 32;
-        }
 
-        return Math.round(high) + "/" + Math.round(low);
-    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,11 +126,11 @@ public class ForecastFragment extends Fragment {
             super.onPostExecute(strings);
             ArrayList<String> data = new ArrayList<String>(Arrays.asList(strings));
             mAdapter.clear();
+
             for (int i=0; i < data.size(); i++) {
                 mAdapter.add(data.get(i));
             }
         }
-
 
         @Override
         protected String[] doInBackground(String... params) {
@@ -193,7 +184,9 @@ public class ForecastFragment extends Fragment {
                 }
                 forecastJsonStr = buffer.toString();
                 WeatherDataParser p = new WeatherDataParser();
-                return p.getWeatherDataFromJson(forecastJsonStr,numDays.intValue());
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String tempUnits = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_default_temperature));
+                return p.getWeatherDataFromJson(forecastJsonStr,numDays.intValue(),tempUnits);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
