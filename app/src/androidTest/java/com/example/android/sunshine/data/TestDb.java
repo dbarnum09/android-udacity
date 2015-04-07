@@ -15,9 +15,11 @@
  */
 package com.example.android.sunshine.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import java.util.HashSet;
 
@@ -112,22 +114,47 @@ public class TestDb extends AndroidTestCase {
     */
     public void testLocationTable() {
         // First step: Get reference to writable database
-
+        SQLiteDatabase db = new WeatherDbHelper(
+                this.mContext).getWritableDatabase();
+        assertEquals(true, db.isOpen());
         // Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
-
+        String testLocationSetting = "99705";
+        String testCityName = "North Pole";
+        double testLatitude = 64.7488;
+        double testLongitude = -147.353;
         // Insert ContentValues into database and get a row ID back
+        ContentValues locTableData = new ContentValues();
+        locTableData.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME,testCityName);
+        locTableData.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,testLocationSetting);
+        locTableData.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT,Double.toString(testLatitude));
+        locTableData.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG,Double.toString(testLongitude));
+        long id = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, locTableData);
+        Log.d(LOG_TAG+"hfdskfhdskfhdskfhdksfjhdskjfds",Double.toString(id));
+        assertTrue(id >= 0);
 
         // Query the database and receive a Cursor back
-
+        Cursor c = db.rawQuery("SELECT * FROM " + WeatherContract.LocationEntry.TABLE_NAME + ";", null);
         // Move the cursor to a valid database row
+        c.moveToFirst();
+        String [] columns = {WeatherContract.LocationEntry.COLUMN_CITY_NAME,WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,WeatherContract.LocationEntry.COLUMN_COORD_LAT,WeatherContract.LocationEntry.COLUMN_COORD_LONG};
+        String [] expectedResults = {testCityName,testLocationSetting,Double.toString(testLatitude),Double.toString(testLongitude)};
+
+        for (int i=0; i < columns.length; i++) {
+            String dbvalue = c.getString(c.getColumnIndex(columns[i]));
+            String expectedValue = expectedResults[i];
+            Log.d(LOG_TAG,"comparing: " + dbvalue + " to " + expectedValue);
+            assertEquals(expectedValue,dbvalue);
+        }
+
 
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
 
         // Finally, close the cursor and database
-
+        c.close();
+        db.close();
     }
 
     /*
