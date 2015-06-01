@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.sunshine.app;
+package com.example.android.sunshine;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,7 +25,7 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
-import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
+import com.example.android.sunshine.data.WeatherContract.WeatherEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,12 +79,12 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
                 PreferenceManager.getDefaultSharedPreferences(mContext);
         String unitType = sharedPrefs.getString(
                 mContext.getString(R.string.pref_units_key),
-                mContext.getString(R.string.pref_units_metric));
+                mContext.getString(R.string.temperature_units_metric));
 
-        if (unitType.equals(mContext.getString(R.string.pref_units_imperial))) {
+        if (unitType.equals(mContext.getString(R.string.temperature_units_imperial))) {
             high = (high * 1.8) + 32;
             low = (low * 1.8) + 32;
-        } else if (!unitType.equals(mContext.getString(R.string.pref_units_metric))) {
+        } else if (!unitType.equals(mContext.getString(R.string.temperature_units_metric))) {
             Log.d(LOG_TAG, "Unit type not found: " + unitType);
         }
 
